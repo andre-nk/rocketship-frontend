@@ -1,6 +1,6 @@
 <template>
   <div class="mx-10 bg-white">
-    <div class="w-full pb-8 pt-4 flex justify-between items-center">
+    <div class="w-full py-6 flex justify-between items-center">
       <div
         class="flex flex-5 flex-col justify-center items-start space-y-[50px]"
       >
@@ -22,61 +22,144 @@
       </div>
       <div class="flex-5 ml-48 w-full">
         <div class="flex space-x-8 w-full">
-          <div
-            :class="
-              videoIndex == 1
-                ? 'h-[32rem] bg-gray-200 flex-[5] duration-300'
-                : 'h-[32rem] bg-gray-200 flex-[2] duration-300'
-            "
-            @mouseenter="registerVideoBlock(1)"
-          >
-            <p>Projects</p>
-          </div>
-          <div
-            :class="
-              videoIndex == 2
-                ? 'h-[32rem] bg-gray-200 flex-[5] duration-300'
-                : 'h-[32rem] bg-gray-200 flex-[2] duration-300'
-            "
-            @mouseenter="registerVideoBlock(2)"
-          >
-            <p>Projects</p>
-          </div>
-          <div
-            :class="
-              videoIndex == 3
-                ? 'h-[32rem] bg-gray-200 flex-[5] duration-300'
-                : 'h-[32rem] bg-gray-200 flex-[2] duration-300'
-            "
-            @mouseenter="registerVideoBlock(3)"
-          >
-            <p>Projects</p>
-          </div>
+          <LandingHero
+            :imageURL="'https://source.unsplash.com/random/800x600'"
+            :videoIndex="videoIndex"
+            :currentIndex="1"
+            :title="'Open Source Projects'"
+            :projectCount="572"
+            :registerVideoBlock="registerVideoBlock"
+          />
+          <LandingHero
+            :imageURL="'https://source.unsplash.com/random/800x600'"
+            :videoIndex="videoIndex"
+            :currentIndex="2"
+            :title="'Technology'"
+            :projectCount="572"
+            :registerVideoBlock="registerVideoBlock"
+          />
+          <LandingHero
+            :imageURL="'https://source.unsplash.com/random/800x600'"
+            :videoIndex="videoIndex"
+            :currentIndex="3"
+            :title="'Humanity'"
+            :projectCount="572"
+            :registerVideoBlock="registerVideoBlock"
+          />
         </div>
       </div>
     </div>
-    <div class="flex space-x-12">
+    <div class="mt-[12rem]">
+      <h2 class="px-4 pb-6 font-semibold text-3xl font-serif">
+        Featured Campaigns
+      </h2>
+      <carousel
+        :paginationEnabled="false"
+        :navigationEnabled="true"
+        :perPageCustom="[
+          [768, 3],
+          [1024, 4],
+        ]"
+      >
+        <slide v-for="campaign in featuredCampaign" :key="campaign.id">
+          <CampaignCard
+            :campaign="campaign"
+            :calculateProgress="calculateProgress"
+          />
+        </slide>
+      </carousel>
     </div>
   </div>
 </template>
 
 <script>
 import { defineComponent, ref, useRouter } from '@nuxtjs/composition-api'
+import LandingHero from '~/components/LandingHero.vue'
+import { Carousel, Slide } from 'vue-carousel'
+import CampaignCard from '~/components/CampaignCard.vue'
 
 export default defineComponent({
   setup() {
-    const videoIndex = ref(1)
     const router = useRouter()
-
-    const registerVideoBlock = (index) => {
-      videoIndex.value = index
-    }
-
     const registerUser = () => {
       router.push('/register')
     }
 
-    return { videoIndex, registerUser, registerVideoBlock }
+    const videoIndex = ref(1)
+    const registerVideoBlock = (index) => {
+      videoIndex.value = index
+    }
+
+    const featuredCampaign = [
+      {
+        id: 1,
+        title: 'NestJS',
+        shortDescription:
+          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
+        currentAmount: 875,
+        goalAmount: 3000,
+      },
+      {
+        id: 2,
+        title: 'NuxtJS',
+        shortDescription:
+          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
+        currentAmount: 1,
+        goalAmount: 3000,
+      },
+      {
+        id: 3,
+        title: 'MeteorJS',
+        shortDescription:
+          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
+        currentAmount: 900,
+        goalAmount: 8822,
+      },
+      {
+        id: 4,
+        title: 'PackMe',
+        shortDescription:
+          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
+        currentAmount: 300,
+        goalAmount: 7654,
+      },
+      {
+        id: 5,
+        title: 'CariTani',
+        shortDescription:
+          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
+        currentAmount: 267,
+        goalAmount: 3842,
+      },
+      {
+        id: 6,
+        title: 'Kedas',
+        shortDescription:
+          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
+        currentAmount: 12,
+        goalAmount: 4567,
+      },
+    ]
+
+    const calculateProgress = (currentAmount, goalAmount) => {
+      const raw =  (currentAmount / goalAmount) * 100
+      var result;
+      if (raw < 1) {  
+        result = raw.toFixed(2)
+      } else {
+        result = raw.toFixed(0)
+      }
+      return result
+    }
+
+    return {
+      videoIndex,
+      featuredCampaign,
+      registerUser,
+      registerVideoBlock,
+      calculateProgress,
+    }
   },
+  components: { LandingHero, Carousel, Slide, CampaignCard },
 })
 </script>
