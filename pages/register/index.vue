@@ -116,7 +116,20 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head() {
+    return {
+      title: 'Register | Rocketship',
+      meta: [
+        {
+          hid: 'register',
+          name: 'Register account',
+          content: 'Create your Rocketship account and start funding a campaign',
+        },
+      ],
+    }
+  },
+}
 </script>
 
 <style></style>

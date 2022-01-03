@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="`campaign/` + props.campaign.id">
     <div
-      class="flex flex-col mx-6 lg:mx-4 mb-3.5 hover:bg-black hover:bg-opacity-5 duration-200 cursor-pointer"
+      class="flex flex-col hover:bg-black hover:bg-opacity-5 duration-200 cursor-pointer"
     >
       <div class="object-cover w-full aspect-video">
         <nuxt-img

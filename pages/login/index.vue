@@ -104,7 +104,20 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head() {
+    return {
+      title: 'Log in | Rocketship',
+      meta: [
+        {
+          hid: "log_in",
+          name: 'Log in',
+          content: 'Log in to your existing account and start funding a campaign',
+        },
+      ],
+    }
+  },
+}
 </script>
 
 <style></style>

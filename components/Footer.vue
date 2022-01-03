@@ -1,7 +1,7 @@
 <template>
   <footer class="py-[2rem]">
     <div
-      class="container flex flex-wrap items-center justify-center mx-auto space-y-4 sm:justify-between sm:space-y-0"
+      class="flex flex-wrap items-center mx-10 space-y-4 justify-between sm:space-y-0"
     >
       <div class="flex flex-row pr-3 space-x-4 sm:space-x-8">
         <nuxt-link to="/">

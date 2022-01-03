@@ -63,10 +63,12 @@
         ]"
       >
         <slide v-for="campaign in featuredCampaign" :key="campaign.id">
-          <CampaignCard
-            :campaign="campaign"
-            :calculateProgress="calculateProgress"
-          />
+          <div class="mx-4">
+            <CampaignCard
+              :campaign="campaign"
+              :calculateProgress="calculateProgress"
+            />
+          </div>
         </slide>
       </carousel>
     </div>
@@ -299,6 +301,18 @@ export default defineComponent({
       registerUser,
       registerVideoBlock,
       calculateProgress,
+    }
+  },
+  head() {
+    return {
+      title: 'Home | Rocketship',
+      meta: [
+        {
+          hid: "home",
+          name: 'Homepage',
+          content: 'Discover and fund bunch of innovative minds with their campaign only on Rocketship',
+        },
+      ],
     }
   },
   components: { LandingHero, Carousel, Slide, CampaignCard },
