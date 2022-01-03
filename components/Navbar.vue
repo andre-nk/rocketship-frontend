@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-w-full text-black py-8 lg:py-5 mx-10 flex justify-between items-center drawer"
+    class="max-w-full text-black py-8 lg:py-5 px-10 flex justify-between items-center drawer"
   >
     <div class="flex w-full lg:w-auto justify-between items-center lg:justify-start lg:space-x-12">
       <nuxt-link to="/">
@@ -10,7 +10,6 @@
       <div class="space-x-8 text-base hidden lg:flex">
         <nuxt-link to="/">Home</nuxt-link>
         <nuxt-link to="/campaign">Campaign</nuxt-link>
-        <nuxt-link to="/about">About</nuxt-link>
       </div>
     </div>
     <div class="hidden lg:flex space-x-9 justify-end items-center">
