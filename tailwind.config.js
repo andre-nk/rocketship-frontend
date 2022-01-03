@@ -1,5 +1,4 @@
 module.exports = {
-  mode: 'jit',
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
@@ -21,6 +20,9 @@ module.exports = {
         "primary-black": "#34364A"
       }
     },
+  },
+  variants: {
+    extend: {}
   },
   plugins: [
     require('@tailwindcss/typography'),

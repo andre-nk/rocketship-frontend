@@ -3,9 +3,12 @@
     <div class="flex flex-col">
       <div class="w-full flex justify-between items-center">
         <h2 class="font-serif font-semibold text-4xl">Dashboard</h2>
-        <button class="py-[10px] px-6 text-white bg-primary-blue">
+        <nuxt-link
+          to="/dashboard/create"
+          class="py-[10px] px-6 text-white bg-primary-blue"
+        >
           Create Campaign
-        </button>
+        </nuxt-link>
       </div>
       <div class="flex items-center space-x-8 mt-6 lg:mt-3 flex-nowrap">
         <button
@@ -87,7 +90,9 @@
               <div class="h-6 w-6 bg-gray-400 rounded-full" />
               <span class="flex space-x-1 text-sm text-gray-600">
                 <p class="text-gray-600">funded by:</p>
-                <p class="underline text-gray-600 hover:bg-primary-blue">Kim Gimyung</p>
+                <p class="underline text-gray-600 hover:bg-primary-blue">
+                  Kim Gimyung
+                </p>
               </span>
             </div>
             <p class="text-sm text-gray-600">2 days ago</p>
