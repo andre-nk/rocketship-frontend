@@ -1,7 +1,7 @@
 <template>
   <div class="mx-10 my-6">
     <div class="w-full flex justify-between items-center">
-      <h2 class="font-serif font-semibold text-4xl">Create a campaign</h2>
+      <h2 class="font-serif font-semibold text-4xl">NextJS</h2>
       <nuxt-link
         to="/dashboard/create"
         class="py-[10px] px-6 text-white bg-primary-blue"
@@ -84,16 +84,47 @@
             </div>
           </div>
         </div>
+
+        <div class="pt-4">
+          <carousel
+            :paginationActiveColor="`#2547FA`"
+            :paginationPadding="6"
+            :paginationEnabled="true"
+            :perPageCustom="[
+              [320, 1],
+              [768, 3],
+              [1024, 4],
+            ]"
+          >
+            <slide v-for="campaign in 4" :key="campaign">
+              <div class="object-cover w-full aspect-video" :class="campaign == 4 ? `pr-6` : `pr-6`">
+                <nuxt-img
+                  class="w-full object-cover aspect-[16/10]"
+                  :src="'https://source.unsplash.com/random'"
+                />
+              </div>
+            </slide>
+          </carousel>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { computed, useRoute } from '@nuxtjs/composition-api'
+import { Carousel, Slide } from 'vue-carousel'
+
 export default {
+  setup() {
+    const route = useRoute()
+    const id = computed(() => route.value.params.id)
+
+    return { id }
+  },
   head() {
     return {
-      title: "Dashboard | Rocketship",
+      title: 'TODO | Rocketship',
       meta: [
         {
           hid: this.$route.params.id,
@@ -101,5 +132,6 @@ export default {
       ],
     }
   },
+  components: { Carousel, Slide },
 }
 </script>
