@@ -216,7 +216,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, useRouter } from '@nuxtjs/composition-api'
+import { defineComponent, ref, useRouter, useStore } from '@nuxtjs/composition-api'
 import { Carousel, Slide } from 'vue-carousel'
 
 import LandingHero from '~/components/LandingHero.vue'
@@ -224,16 +224,24 @@ import CampaignCard from '~/components/CampaignCard.vue'
 
 export default defineComponent({
   async asyncData({ $axios }){
-    var featuredCampaign = await $axios.$get('/api/v1/campaigns')
-    featuredCampaign = featuredCampaign.data
+    var rawCampaigns = await $axios.$get('/api/v1/campaigns')
+    var featuredCampaign = rawCampaigns.data.sort((a, b) => {
+      return b.current_amount - a.current_amount
+    });
+    featuredCampaign = featuredCampaign.slice(0, 4)
 
     return { featuredCampaign }
   },  
   setup() {
     const router = useRouter()
+    const store = useStore()
 
     const registerUser = () => {
-      router.push('/register')
+      if(store.state.auth.user != null){
+        router.push('/campaign')
+      } else {
+        router.push('/register')
+      }
     }
 
     const videoIndex = ref(1)

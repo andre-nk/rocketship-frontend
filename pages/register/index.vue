@@ -9,42 +9,79 @@
 
     <div class="w-full px-6 py-8 md:px-8 lg:w-1/2">
       <p class="text-xl text-center text-gray-600">Welcome to our community!</p>
-      <button
-        href="#"
-        class="flex items-center justify-center w-full mt-4 text-gray-600 transition-colors duration-200 transform border hover:bg-gray-50"
-      >
-        <div class="px-4 py-2">
-          <svg class="w-6 h-6" viewBox="0 0 40 40">
-            <path
-              d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
-              fill="#FFC107"
+
+      <div class="mt-8 mb-4">
+        <div class="flex items-center justify-center w-full cursor-pointer">
+          <div
+            @click="$refs.file.click()"
+            class="flex flex-col justify-center items-center group border-2 border-dashed w-full h-32 hover:bg-gray-100 hover:border-primary-blue hover:border-opacity-70 duration-200"
+          >
+            <div
+              class="flex flex-col items-center space-y-2 justify-center text-gray-400 group-hover:text-primary-blue"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6"
+                viewBox="0 0 512 512"
+              >
+                <title>Images</title>
+                <path
+                  d="M432 112V96a48.14 48.14 0 00-48-48H64a48.14 48.14 0 00-48 48v256a48.14 48.14 0 0048 48h16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                />
+                <rect
+                  x="96"
+                  y="128"
+                  width="400"
+                  height="336"
+                  rx="45.99"
+                  ry="45.99"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                />
+                <ellipse
+                  cx="372.92"
+                  cy="219.64"
+                  rx="30.77"
+                  ry="30.55"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="32"
+                />
+                <path
+                  d="M342.15 372.17L255 285.78a30.93 30.93 0 00-42.18-1.21L96 387.64M265.23 464l118.59-117.73a31 31 0 0141.46-1.87L496 402.91"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                />
+              </svg>
+              <p
+                class="lowercase text-sm text-gray-400 group-hover:text-primary-blue pt-1 tracking-wider"
+              >
+                {{
+                  avatarModel.selectedFiles != null
+                    ? avatarModel.selectedFiles[0].name
+                    : 'Pick your avatar'
+                }}
+              </p>
+            </div>
+            <input
+              type="file"
+              ref="file"
+              accept="image/*"
+              @change="onFileChange"
+              class="hidden"
             />
-            <path
-              d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z"
-              fill="#FF3D00"
-            />
-            <path
-              d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z"
-              fill="#4CAF50"
-            />
-            <path
-              d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
-              fill="#1976D2"
-            />
-          </svg>
+          </div>
         </div>
-        <span class="w-5/6 px-4 py-3 text-center">Sign up with Google</span>
-      </button>
-
-      <div class="flex items-center justify-between my-8">
-        <span class="w-1/5 border-b lg:w-1/4"></span>
-        <a
-          href="#"
-          class="text-xs text-center text-gray-500 uppercase hover:underline"
-          >or sign up with email</a
-        >
-
-        <span class="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
       </div>
 
       <div class="mt-4">
@@ -98,7 +135,8 @@
       <div class="mt-8">
         <button
           @click="register"
-          class="w-full px-4 py-3 tracking-wide text-white transition-colors duration-200 transform bg-primary-blue focus:outline-none focus:bg-gray-600"
+          :disabled="avatarModel.selectedFiles == undefined"
+          class="w-full px-4 py-3 tracking-wide text-white duration-200 bg-primary-blue disabled:bg-opacity-50"
         >
           Create your account
         </button>
@@ -142,19 +180,52 @@ export default {
         email: '',
         password: '',
       },
+      avatarModel: {
+        url: '/avatar.jpg',
+        selectedFiles: undefined,
+      },
     }
   },
   methods: {
     async register() {
-      try {
-        let response = await this.$axios.post('/api/v1/users', this.registerModel)
+      let formData = new FormData()
+      formData.append('avatar', this.avatarModel.selectedFiles.item(0))
 
-        this.$auth.setUserToken(response.data.data.token).then(() => {
+      try {
+        let registerResponse = await this.$axios.post(
+          '/api/v1/users',
+          this.registerModel
+        )
+        console.log(registerResponse)
+
+        let avatarResponse = await this.$axios.post(
+          '/api/v1/avatars',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              "Authorization": 'Bearer ' + registerResponse.data.data.token,
+            },
+          }
+        )
+        console.log(avatarResponse)
+
+        this.$auth.setUserToken(registerResponse.data.data.token).then(() => {
           this.$router.push('/')
         })
+
+        this.uploadAvatar(response)
       } catch (e) {
         console.log(e)
       }
+    },
+    onFileChange(e) {
+      const file = e.target.files[0]
+      this.avatarModel.url = URL.createObjectURL(file)
+      this.avatarModel.selectedFiles = this.$refs.file.files
+
+      console.log(this.avatarModel.url)
+      console.log(this.avatarModel.selectedFiles)
     },
   },
 }

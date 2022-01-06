@@ -32,7 +32,7 @@
         </button>
       </div>
       <div class="lg:flex space-x-9 justify-end items-center" v-else>
-        <nuxt-link class="text-primary-orange" to="/login"
+        <nuxt-link class="text-primary-orange" to="/dashboard"
           >My dashboard</nuxt-link
         >
         <button

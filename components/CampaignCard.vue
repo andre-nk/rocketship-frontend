@@ -59,12 +59,6 @@ export default {
     },
   },
   setup(props) {
-    const width =
-      props.calculateProgress(
-        props.campaign.current_amount,
-        props.campaign.goal_amount
-      ) + '%'
-
     return { props }
   },
 }
