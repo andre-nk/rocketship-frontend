@@ -55,6 +55,7 @@
         >
         <input
           id="LoggingEmailAddress"
+          v-model="loginModel.email"
           class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
           type="email"
         />
@@ -74,6 +75,8 @@
 
         <input
           id="loggingPassword"
+          v-model="loginModel.password"
+          @keyup.enter="login"
           class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 focus:outline-none focus:ring"
           type="password"
         />
@@ -81,6 +84,7 @@
 
       <div class="mt-8">
         <button
+          @click="login"
           class="w-full px-4 py-3 tracking-wide text-white transition-colors duration-200 transform bg-primary-blue focus:outline-none focus:bg-gray-600"
         >
           Login
@@ -105,14 +109,38 @@
 
 <script>
 export default {
+  data() {
+    return {
+      loginModel: {
+        email: '',
+        password: '',
+      },
+    }
+  },
+  methods: {
+    async login() {
+      try {
+        let response = await this.$auth.loginWith('local', {
+          data: this.loginModel,
+        })
+        this.$auth.setUser(response.data.data)
+
+        console.log(response.data.data)
+      } catch (e) {
+        console.log("goblok")
+        console.log(e)
+      }
+    },
+  },
   head() {
     return {
       title: 'Log in | Rocketship',
       meta: [
         {
-          hid: "log_in",
+          hid: 'log_in',
           name: 'Log in',
-          content: 'Log in to your existing account and start funding a campaign',
+          content:
+            'Log in to your existing account and start funding a campaign',
         },
       ],
     }

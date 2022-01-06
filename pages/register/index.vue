@@ -54,6 +54,7 @@
           >Your Name</label
         >
         <input
+          v-model="registerModel.name"
           class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
           type="text"
         />
@@ -67,6 +68,7 @@
         >
         <input
           id="LoggingEmailAddress"
+          v-model="registerModel.email"
           class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
           type="email"
         />
@@ -86,6 +88,8 @@
 
         <input
           id="loggingPassword"
+          v-model="registerModel.password"
+          @keyup.enter="register"
           class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 focus:outline-none focus:ring"
           type="password"
         />
@@ -93,6 +97,7 @@
 
       <div class="mt-8">
         <button
+          @click="register"
           class="w-full px-4 py-3 tracking-wide text-white transition-colors duration-200 transform bg-primary-blue focus:outline-none focus:bg-gray-600"
         >
           Create your account
@@ -124,10 +129,33 @@ export default {
         {
           hid: 'register',
           name: 'Register account',
-          content: 'Create your Rocketship account and start funding a campaign',
+          content:
+            'Create your Rocketship account and start funding a campaign',
         },
       ],
     }
+  },
+  data() {
+    return {
+      registerModel: {
+        name: '',
+        email: '',
+        password: '',
+      },
+    }
+  },
+  methods: {
+    async register() {
+      try {
+        let response = await this.$axios.post('/api/v1/users', this.registerModel)
+
+        this.$auth.setUserToken(response.data.data.token).then(() => {
+          this.$router.push('/')
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    },
   },
 }
 </script>

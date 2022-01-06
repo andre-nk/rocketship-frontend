@@ -6,16 +6,16 @@
       <div class="object-cover w-full aspect-video">
         <nuxt-img
           class="w-full object-cover aspect-[16/10]"
-          :src="'https://source.unsplash.com/random'"
+          :src="$axios.defaults.baseURL + `/` + props.campaign.image_url"
         />
       </div>
       <div class="p-4 pt-[18px] select-none">
         <div class="mb-4">
           <h2 class="font-serif text-xl font-medium mb-1">
-            {{ props.campaign.title }}
+            {{ props.campaign.name }}
           </h2>
           <p class="text-sm font-light">
-            {{ props.campaign.shortDescription }}
+            {{ props.campaign.short_description }}
           </p>
         </div>
         <div class="w-full bg-gray-200 h-[6px]">
@@ -24,8 +24,8 @@
             :style="{
               width:
                 props.calculateProgress(
-                  props.campaign.currentAmount,
-                  props.campaign.goalAmount
+                  props.campaign.current_amount,
+                  props.campaign.goal_amount
                 ) + '%',
             }"
           ></div>
@@ -34,12 +34,12 @@
           <p class="font-light">
             {{
               props.calculateProgress(
-                props.campaign.currentAmount,
-                props.campaign.goalAmount
+                props.campaign.current_amount,
+                props.campaign.goal_amount
               )
             }}%
           </p>
-          <p>${{ props.campaign.goalAmount }}</p>
+          <p>${{ props.campaign.goal_amount }}</p>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  name: 'props.campaignCard',
+  name: 'campaignCard',
   props: {
     campaign: {
       required: true,
@@ -59,6 +59,12 @@ export default {
     },
   },
   setup(props) {
+    const width =
+      props.calculateProgress(
+        props.campaign.current_amount,
+        props.campaign.goal_amount
+      ) + '%'
+
     return { props }
   },
 }

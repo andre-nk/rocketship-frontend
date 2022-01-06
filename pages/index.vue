@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="mt-[10rem] lg:mt-[12rem]">
-      <h2 class="px-4 pb-8 font-semibold text-3xl font-serif">
+      <h2 class="lg:px-4 pb-8 font-semibold text-3xl font-serif">
         Featured Campaigns
       </h2>
       <carousel
@@ -217,13 +217,21 @@
 
 <script>
 import { defineComponent, ref, useRouter } from '@nuxtjs/composition-api'
-import LandingHero from '~/components/LandingHero.vue'
 import { Carousel, Slide } from 'vue-carousel'
+
+import LandingHero from '~/components/LandingHero.vue'
 import CampaignCard from '~/components/CampaignCard.vue'
 
 export default defineComponent({
+  async asyncData({ $axios }){
+    var featuredCampaign = await $axios.$get('/api/v1/campaigns')
+    featuredCampaign = featuredCampaign.data
+
+    return { featuredCampaign }
+  },  
   setup() {
     const router = useRouter()
+
     const registerUser = () => {
       router.push('/register')
     }
@@ -232,57 +240,6 @@ export default defineComponent({
     const registerVideoBlock = (index) => {
       videoIndex.value = index
     }
-
-    const featuredCampaign = [
-      {
-        id: 1,
-        title: 'NestJS',
-        shortDescription:
-          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
-        currentAmount: 875,
-        goalAmount: 3000,
-      },
-      {
-        id: 2,
-        title: 'NuxtJS',
-        shortDescription:
-          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
-        currentAmount: 1,
-        goalAmount: 3000,
-      },
-      {
-        id: 3,
-        title: 'MeteorJS',
-        shortDescription:
-          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
-        currentAmount: 900,
-        goalAmount: 8822,
-      },
-      {
-        id: 4,
-        title: 'PackMe',
-        shortDescription:
-          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
-        currentAmount: 300,
-        goalAmount: 7654,
-      },
-      {
-        id: 5,
-        title: 'CariTani',
-        shortDescription:
-          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
-        currentAmount: 267,
-        goalAmount: 3842,
-      },
-      {
-        id: 6,
-        title: 'Kedas',
-        shortDescription:
-          'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications',
-        currentAmount: 12,
-        goalAmount: 4567,
-      },
-    ]
 
     const calculateProgress = (currentAmount, goalAmount) => {
       const raw = (currentAmount / goalAmount) * 100
@@ -297,7 +254,6 @@ export default defineComponent({
 
     return {
       videoIndex,
-      featuredCampaign,
       registerUser,
       registerVideoBlock,
       calculateProgress,
