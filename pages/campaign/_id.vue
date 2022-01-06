@@ -5,8 +5,26 @@
     <div class="lg:flex-[12]">
       <div class="lg:py-8">
         <h2 class="font-serif font-semibold text-4xl">
-          {{ campaign.data.name }}
+          {{ campaigns.data.name }}
         </h2>
+        <div class="flex space-x-2.5 items-center mt-4">
+          <div
+            class="h-10 w-10 bg-gray-400 rounded-full object-cover overflow-hidden"
+          >
+            <nuxt-img
+              class="object-cover"
+              :src="
+                $axios.defaults.baseURL + `/` + campaigns.data.user.image_url
+              "
+            />
+          </div>
+          <span class="flex space-x-1 text-base text-gray-600">
+            <p class="text-gray-600">created by:</p>
+            <p class="underline text-gray-600 hover:bg-primary-blue">
+              {{ campaigns.data.user.name }}
+            </p>
+          </span>
+        </div>
       </div>
       <div class="mb-12 mt-8">
         <div class="hidden lg:block">
@@ -14,18 +32,21 @@
             <nuxt-img
               class="w-full object-cover aspect-[16/10]"
               :src="
-                $axios.defaults.baseURL + `/` + primaryThumbnail[0].image_url
+                $axios.defaults.baseURL +
+                `/` +
+                (overrideThumbnail || primaryThumbnail[0].image_url)
               "
             />
           </div>
           <div class="grid grid-cols-4 grid-rows-1 gap-4 w-full mt-4">
             <div
-              class="object-cover w-full aspect-video"
-              v-for="thumbnail in nonPrimaryThumbnails"
+              class="object-cover w-full aspect-video border border-gray-200 hover:border-gray-400 duration-200"
+              v-for="thumbnail in campaigns.data.campaign_images"
               :key="thumbnail.image_url"
+              @click="updateThumbnail(thumbnail.image_url)"
             >
               <nuxt-img
-                class="w-full object-cover aspect-[16/10]"
+                class="w-full object-cover aspect-[16/10] hover:saturate-200 duration-200"
                 :src="$axios.defaults.baseURL + `/` + thumbnail.image_url"
               />
             </div>
@@ -43,7 +64,7 @@
             ]"
           >
             <slide
-              v-for="thumbnail in campaign.data.campaign_images"
+              v-for="thumbnail in campaigns.data.campaign_images"
               :key="thumbnail.image_url"
             >
               <div class="object-cover w-full aspect-video">
@@ -66,8 +87,8 @@
                 :style="{
                   width:
                     calculateProgress(
-                      campaign.data.current_amount,
-                      campaign.data.goal_amount
+                      campaigns.data.current_amount,
+                      campaigns.data.goal_amount
                     ) + '%',
                 }"
               ></div>
@@ -76,8 +97,8 @@
               <p class="font-light">
                 {{
                   calculateProgress(
-                    campaign.data.current_amount,
-                    campaign.data.goal_amount
+                    campaigns.data.current_amount,
+                    campaigns.data.goal_amount
                   )
                 }}%
               </p>
@@ -86,13 +107,13 @@
                   new Intl.NumberFormat('id-ID', {
                     style: 'currency',
                     currency: 'IDR',
-                  }).format(campaign.data.goal_amount)
+                  }).format(campaigns.data.goal_amount)
                 }}
               </p>
             </div>
           </section>
           <p class="prose mx-2 lg:mx-0">
-            {{ campaign.data.description }}
+            {{ campaigns.data.description }}
           </p>
         </div>
       </div>
@@ -103,7 +124,7 @@
           new Intl.NumberFormat('id-ID', {
             style: 'currency',
             currency: 'IDR',
-          }).format(campaign.data.goal_amount)
+          }).format(campaigns.data.goal_amount)
         }}
       </h2>
       <p class="text-md mt-2 space-x-1 flex">for the final goal</p>
@@ -117,12 +138,14 @@
           placeholder="Enter the amount (Rp)"
           class="block w-full px-4 py-3 text-gray-700 bg-white border outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
           type="number"
+          v-model.number="transactionModel.amount"
         />
       </div>
       <div class="mt-4">
         <button
-          :disabled="this.$store.state.auth.user != null"
-          class="w-full px-4 py-2.5 tracking-wide text-white transition-colors duration-200 transform cursor-not-allowed bg-primary-blue disabled:bg-opacity-50"
+          :disabled="transactionModel.amount == 0"
+          @click="fundCampaign"
+          class="w-full px-4 py-2.5 tracking-wide text-white duration-200 disabled:cursor-not-allowed bg-primary-blue disabled:bg-opacity-50"
         >
           Fund this campaign!
         </button>
@@ -134,7 +157,7 @@
       <section class="flex flex-col space-y-4">
         <div
           class="flex space-x-4 justify-start items-center"
-          v-for="perk in campaign.data.perks"
+          v-for="perk in campaigns.data.perks"
           :key="perk"
         >
           <div class="h-6 w-6">
@@ -168,21 +191,50 @@
 
 <script>
 import { Carousel, Slide } from 'vue-carousel'
+import { ref } from '@vue/composition-api'
 
 export default {
   async asyncData({ $axios, params }) {
-    const campaign = await $axios.$get('/api/v1/campaigns/' + params.id)
-    const primaryThumbnail = campaign.data.campaign_images.filter((img) => {
+    const campaigns = await $axios.$get('/api/v1/campaigns/' + params.id)
+    const primaryThumbnail = campaigns.data.campaign_images.filter((img) => {
       return img.is_primary == true
     })
-    const nonPrimaryThumbnails = campaign.data.campaign_images.filter((img) => {
-      return img.is_primary != true
-    })
 
-    return { campaign, primaryThumbnail, nonPrimaryThumbnails }
+    return { campaigns, primaryThumbnail }
+  },
+  data() {
+    return {
+      transactionModel: {
+        amount: 0,
+        campaign_id: Number.parseInt(this.$route.params.id),
+      },
+    }
+  },
+  methods: {
+    async fundCampaign() {
+      if (this.$store.state.auth.user == null) {
+        this.$router.push('/login')
+      } else {
+        try {
+          let response = await this.$axios.post(
+            'api/v1/transactions',
+            this.transactionModel
+          )
+          console.log(response)
+
+          window.location = response.data.data.payment_url
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    },
   },
   setup() {
-    const campaignThumbnails = ['a', 'b', 'c', 'd']
+    const overrideThumbnail = ref('')
+    const updateThumbnail = (link) => {
+      overrideThumbnail.value = link
+    }
+
     const calculateProgress = (currentAmount, goalAmount) => {
       const raw = (currentAmount / goalAmount) * 100
       var result
@@ -194,16 +246,16 @@ export default {
       return result
     }
 
-    return { campaignThumbnails, calculateProgress }
+    return { overrideThumbnail, updateThumbnail, calculateProgress }
   },
   head() {
     return {
-      title: this.campaign.data.name + ' | Rocketship',
+      title: this.campaigns.data.name + ' | Rocketship',
       meta: [
         {
           hid: this.$route.params.id,
-          name: this.campaign.data.name + ' | Rocketship',
-          content: this.campaign.data.short_description,
+          name: this.campaigns.data.name + ' | Rocketship',
+          content: this.campaigns.data.short_description,
         },
       ],
     }
