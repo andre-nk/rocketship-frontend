@@ -144,10 +144,10 @@
       <div class="mt-4">
         <button
           :disabled="transactionModel.amount == 0"
-          @click="fundCampaign"
+          @click="campaigns.data.goal_amount == campaigns.data.current_amount ? () => {} : fundCampaign"
           class="w-full px-4 py-2.5 tracking-wide text-white duration-200 disabled:cursor-not-allowed bg-primary-blue disabled:bg-opacity-50"
         >
-          Fund this campaign!
+          {{campaigns.data.goal_amount == campaigns.data.current_amount ? "This campaign is completed" : "Fund this campaign!"}}
         </button>
       </div>
       <div class="w-full h-[1px] mt-8 mb-4 bg-gray-200" />

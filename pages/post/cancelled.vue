@@ -3,10 +3,10 @@
     <div class="container flex flex-col items-center justify-center px-5 my-8">
       <div class="text-center">
         <h2 class="mb-8 font-extrabold text-9xl dark:text-coolGray-600">
-          <span class="sr-only">Error</span>404
+          Cancelled
         </h2>
         <p class="text-2xl font-semibold md:text-3xl">
-          Sorry, we couldn't find this page.
+          Sorry to have you cancel this funding
         </p>
         <p class="mt-2.5 mb-16 text-xl">
           But dont worry, you can find plenty of other things on Rocketship.
@@ -28,11 +28,11 @@
 export default {
   head() {
     return {
-      title: 'Not Found | Rocketship',
+      title: 'Funding Cancelled | Rocketship',
       meta: [
         {
-          hid: '404_not_found',
-          name: 'Not Found',
+          hid: 'cancelled',
+          name: 'Funding Cancelled',
           content:
             'Discover and fund bunch of innovative minds with their campaign only on Rocketship',
         },

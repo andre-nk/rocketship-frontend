@@ -2,12 +2,12 @@
   <div class="mx-10 my-6">
     <div class="w-full flex justify-between items-center">
       <h2 class="font-serif font-semibold text-4xl">Create a campaign</h2>
-      <nuxt-link
-        to="/dashboard/create"
+      <button
+        @click="createCampaign"
         class="py-[10px] px-6 text-white bg-primary-blue"
       >
         Save
-      </nuxt-link>
+      </button>
     </div>
     <div
       class="flex max-w-sm mx-auto my-12 overflow-hidden bg-white shadow-lg lg:max-w-4xl"
@@ -21,6 +21,8 @@
           >
           <input
             id="campaignName"
+            v-model="campaign.name"
+            placeholder="Ex: FakerJS"
             class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
             type="text"
           />
@@ -35,6 +37,8 @@
 
           <textarea
             id="shortDescription"
+            v-model="campaign.short_description"
+            placeholder="Ex: FakerJS is a essential library for creating a swift mock data for your project"
             class="block w-full p-4 text-gray-700 bg-white border outline-none focus:border-blue-500 focus:outline-none focus:ring resize-none"
           />
         </div>
@@ -49,6 +53,8 @@
           <textarea
             rows="7"
             id="description"
+            v-model="campaign.description"
+            placeholder="Ex: FakerJS is a essential library for creating a swift mock data for your project"
             class="block w-full p-4 text-gray-700 bg-white border outline-none focus:border-blue-500 focus:outline-none focus:ring resize-none"
           />
         </div>
@@ -62,6 +68,8 @@
 
           <textarea
             id="perks"
+            v-model="campaign.perks"
+            placeholder="Ex: FakerJS will credit all financial contributors in the framework license and Github README.md"
             class="block w-full p-4 text-gray-700 bg-white border outline-none focus:border-blue-500 focus:outline-none focus:ring resize-none"
           />
         </div>
@@ -70,15 +78,17 @@
           <div>
             <label
               class="block mb-2 text-sm font-medium text-gray-600"
-              for="perks"
+              for="campaign_goal"
               >Campaign goal</label
             >
 
             <div class="flex space-x-2.5 items-center">
               <p>Rp</p>
               <input
-                id="perks"
+                id="campaign_goal"
                 type="number"
+                placeholder="Ex: 100000"
+                v-model.number="campaign.goal_amount"
                 class="block w-full px-4 py-2 text-gray-700 bg-white border outline-none focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
@@ -91,9 +101,33 @@
 
 <script>
 export default {
+  middleware: 'auth',
+  data(){
+    return {
+      campaign: {
+        name: "",
+        short_description: "",
+        description: "",
+        goal_amount: 0,
+        perks: ""
+      }
+    }
+  },
+  methods: {
+    async createCampaign(){
+      try {
+        let response = await this.$axios.$post("api/v1/campaigns", this.campaign);
+        console.log(response);
+
+        this.$router.push("/dashboard/" + response.data.id)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  },
   head() {
     return {
-      title: "Dashboard | Rocketship",
+      title: "Create Campaign | Rocketship",
       meta: [
         {
           hid: this.$route.params.id,

@@ -32,35 +32,57 @@
       v-if="selectedTabs == 0"
       class="w-full grid lg:grid-cols-2 gap-10 mt-10"
     >
-      <div
-        v-for="campaign in campaignThumbnails"
+      <nuxt-link
+        v-for="campaign in userCampaigns.data"
         :key="campaign.id"
-        class="w-full p-3 pr-0 border-gray-300 border flex hover:bg-gray-100 duration-200"
+        :to="`/dashboard/` + campaign.id"
       >
-        <div class="object-cover w-full flex-[3]">
-          <nuxt-img
-            class="w-full object-cover lg:aspect-video"
-            :src="'https://source.unsplash.com/random'"
-          />
-        </div>
-        <div class="flex-[8] flex flex-col h-full justify-between py-2 px-6">
-          <h2 class="text-lg font-medium">Jang Hyun</h2>
-          <div>
-            <div class="w-full bg-gray-200 h-[6px]">
-              <div
-                class="bg-primary-orange h-[6px]"
-                :style="{
-                  width: calculateProgress(30, 36) + '%',
-                }"
-              ></div>
-            </div>
-            <div class="flex px-1 pt-2 justify-between items-center text-sm">
-              <p class="font-light">{{ calculateProgress(30, 36) }}%</p>
-              <p>${{ 36 }}</p>
+        <div
+          class="w-full h-full p-3 pr-0 border-gray-300 border flex hover:bg-gray-100 duration-200"
+        >
+          <div class="object-cover w-full flex-[3]">
+            <nuxt-img
+              class="w-full object-cover lg:aspect-video"
+              :src="$axios.defaults.baseURL + `/` + campaign.image_url"
+            />
+          </div>
+          <div class="flex-[8] flex flex-col h-full justify-between py-2 px-6">
+            <h2 class="text-lg font-medium">{{ campaign.name }}</h2>
+            <div>
+              <div class="w-full bg-gray-200 h-[6px]">
+                <div
+                  class="bg-primary-orange h-[6px]"
+                  :style="{
+                    width:
+                      calculateProgress(
+                        campaign.current_amount,
+                        campaign.goal_amount
+                      ) + '%',
+                  }"
+                ></div>
+              </div>
+              <div class="flex px-1 pt-2 justify-between items-center text-sm">
+                <p class="font-light">
+                  {{
+                    calculateProgress(
+                      campaign.current_amount,
+                      campaign.goal_amount
+                    )
+                  }}%
+                </p>
+                <p>
+                  {{
+                    new Intl.NumberFormat('id-ID', {
+                      style: 'currency',
+                      currency: 'IDR',
+                    }).format(campaign.goal_amount)
+                  }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </nuxt-link>
     </section>
 
     <section
@@ -68,34 +90,56 @@
       class="w-full flex flex-col space-y-10 mt-10"
     >
       <div
-        v-for="campaign in campaignThumbnails"
-        :key="campaign.id"
+        v-for="transaction in userTransactions.data"
+        :key="transaction.id"
         class="w-full h-full p-3 pr-0 border-gray-300 border flex hover:bg-gray-100 duration-200"
       >
         <div class="object-cover w-full flex-[1.5]">
           <nuxt-img
             class="w-full object-cover lg:aspect-video"
-            :src="'https://source.unsplash.com/random'"
+            :src="
+              $axios.defaults.baseURL + `/` + transaction.campaign.image_url
+            "
           />
         </div>
         <div
           class="flex-[11] flex flex-col justify-between max-h-full py-2 px-6"
         >
           <div class="flex justify-between">
-            <h2 class="text-lg font-medium">Jang Hyun</h2>
-            <h2 class="text-lg font-medium">Rp150,000</h2>
+            <h2 class="text-lg font-medium">{{ transaction.campaign.name }}</h2>
+            <h2 class="text-lg font-medium">
+              {{
+                new Intl.NumberFormat('id-ID', {
+                  style: 'currency',
+                  currency: 'IDR',
+                }).format(transaction.amount)
+              }}
+            </h2>
           </div>
           <div class="flex justify-between">
-            <div class="flex space-x-4 items-center">
-              <div class="h-6 w-6 bg-gray-400 rounded-full" />
-              <span class="flex space-x-1 text-sm text-gray-600">
-                <p class="text-gray-600">funded by:</p>
-                <p class="underline text-gray-600 hover:bg-primary-blue">
-                  Kim Gimyung
-                </p>
-              </span>
-            </div>
-            <p class="text-sm text-gray-600">2 days ago</p>
+            <span class="flex space-x-1 text-sm text-gray-600">
+              <p class="text-gray-600">status:</p>
+              <p
+                class="underline capitalize"
+                :class="
+                  transaction.status == `pending`
+                    ? `text-primary-orange`
+                    : transaction.status == `paid`
+                    ? `text-green-500`
+                    : `text-red-400`
+                "
+              >
+                {{ transaction.status }}
+              </p>
+            </span>
+            <p class="text-sm text-gray-600">
+              {{
+                new Date(transaction.created_at).toLocaleDateString(
+                  'en-US',
+                  options
+                )
+              }}
+            </p>
           </div>
         </div>
       </div>
@@ -106,6 +150,16 @@
 <script>
 import { ref } from '@vue/composition-api'
 export default {
+  middleware: 'auth',
+  async asyncData({ $axios, app }) {
+    const userCampaigns = await $axios.$get(
+      'api/v1/campaigns?user_id=' + app.$auth.user.id
+    )
+    const userTransactions = await $axios.$get('/api/v1/transactions')
+    console.log(userTransactions)
+
+    return { userCampaigns, userTransactions }
+  },
   setup() {
     const selectedTabs = ref(0)
 
@@ -113,7 +167,6 @@ export default {
       selectedTabs.value = index
     }
 
-    const campaignThumbnails = ['a', 'b', 'c', 'd']
     const calculateProgress = (currentAmount, goalAmount) => {
       const raw = (currentAmount / goalAmount) * 100
       var result
@@ -125,7 +178,19 @@ export default {
       return result
     }
 
-    return { campaignThumbnails, calculateProgress, selectedTabs, changeTab }
+    var options = { day: 'numeric', month: 'long', year: 'numeric' }
+
+    return { calculateProgress, selectedTabs, options, changeTab }
+  },
+  head() {
+    return {
+      title: 'Dashboard | Rocketship',
+      meta: [
+        {
+          hid: this.$route.params.id,
+        },
+      ],
+    }
   },
 }
 </script>

@@ -39,7 +39,14 @@
               )
             }}%
           </p>
-          <p>${{ props.campaign.goal_amount }}</p>
+          <p>
+            {{
+              Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+              }).format(props.campaign.goal_amount)
+            }}
+          </p>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@
       <div class="flex-5 ml-48 w-full hidden lg:flex">
         <div class="flex space-x-8 w-full">
           <LandingHero
-            :imageURL="'https://source.unsplash.com/random/800x600'"
+            :imageURL="'https://images.unsplash.com/photo-1638913662252-70efce1e60a7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80'"
             :videoIndex="videoIndex"
             :currentIndex="1"
             :title="'Open Source Projects'"
@@ -31,7 +31,7 @@
             :registerVideoBlock="registerVideoBlock"
           />
           <LandingHero
-            :imageURL="'https://source.unsplash.com/random/800x600'"
+            :imageURL="'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80'"
             :videoIndex="videoIndex"
             :currentIndex="2"
             :title="'Technology'"
@@ -39,7 +39,7 @@
             :registerVideoBlock="registerVideoBlock"
           />
           <LandingHero
-            :imageURL="'https://source.unsplash.com/random/800x600'"
+            :imageURL="'https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80'"
             :videoIndex="videoIndex"
             :currentIndex="3"
             :title="'Humanity'"
